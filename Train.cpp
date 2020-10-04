@@ -1,20 +1,103 @@
-// Train.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <stack>
+#include <string>
+#include <fstream>
+#include <filesystem>
+
+using namespace std;
+
+class RailwayCarriage
+{
+    string type;
+
+public:
+    RailwayCarriage(string type)
+    {
+        this->type = type;
+    }
+
+public:
+    string getType()
+    {
+        return type;
+    }
+};
+
+void handleHandInput(stack <RailwayCarriage>* railwayCarriages, int count)
+{
+    for (int index = 0; index < count; index++)
+    {
+        string type;
+        cout << "Enter Railway Carriage type: ";
+        cin >> type;
+
+        RailwayCarriage railwayCarriage = RailwayCarriage(type);
+        railwayCarriages->push(railwayCarriage);
+    }
+}
+
+void handleFileInput(stack <RailwayCarriage>* railwayCarriages, string filePath)
+{
+    ifstream inFile;
+    inFile.open(filePath);
+
+    if (inFile) {
+        cout << "Reading from the file" << endl;
+
+        string type;
+        int index = 0;
+        while (inFile >> type) {
+            RailwayCarriage railwayCarriage = RailwayCarriage(type);
+            railwayCarriages->push(railwayCarriage);
+        }
+    }
+    else
+    {
+        cout << "No such group" << endl;
+        system("pause");
+    }
+
+    inFile.close();
+}
+
+void generateRailwayCarriages(stack <RailwayCarriage>* railwayCarriages)
+{
+    handleFileInput(railwayCarriages, "railwayCarriages.txt");
+    handleHandInput(railwayCarriages, 4);
+}
+
+void divideRailwayCarriagesByType(
+    stack <RailwayCarriage>* railwayCarriages,
+    stack <RailwayCarriage>* typeOneRailwayCarriages,
+    stack <RailwayCarriage>* otherRailwayCarriages)
+{
+    while (!railwayCarriages->empty())
+    {
+        RailwayCarriage railwayCarriage = railwayCarriages->top();
+        if (railwayCarriage.getType() == "type1")
+        {
+            typeOneRailwayCarriages->push(railwayCarriage);
+        } 
+        else
+        {
+            otherRailwayCarriages->push(railwayCarriage);
+        }
+        railwayCarriages->pop();
+    }
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    stack <RailwayCarriage> railwayCarriages;
+    generateRailwayCarriages(&railwayCarriages);
+
+    cout << railwayCarriages.size() << endl;
+
+    stack <RailwayCarriage> typeOneRailwayCarriages;
+    stack <RailwayCarriage> otherRailwayCarriages;
+    divideRailwayCarriagesByType(&railwayCarriages, &typeOneRailwayCarriages, &otherRailwayCarriages);
+
+    cout << railwayCarriages.size() << endl;
+    cout << typeOneRailwayCarriages.size() << endl;
+    cout << otherRailwayCarriages.size() << endl;
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

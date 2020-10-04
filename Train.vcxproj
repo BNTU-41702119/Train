@@ -141,6 +141,15 @@
   <ItemGroup>
     <ClCompile Include="Train.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Train.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="railwayCarriages.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
